@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portfolio · Desarrollo de Aplicaciones Web</title>
+<style>
+:root{--bg:#050b1f;--bg2:#0d2a6b;--ink:#eef3ff;--mute:#9fb0d6;--card:#14224a;--acc:#4da3ff;--gold:#ffd24d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#050b1f}}
+:root[data-theme="dark"]{--bg:#050b1f}
+*{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:radial-gradient(120% 90% at 70% 0%,var(--bg2),var(--bg) 60%) fixed;color:var(--ink);font-family:"Rubik","Segoe UI",system-ui,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 5vw;gap:12px;flex-wrap:wrap}
+.user{display:flex;align-items:center;gap:12px}
+.av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--acc),#7b5cff);display:grid;place-items:center;font-weight:700}
+nav{display:flex;gap:6px;background:#ffffff14;border-radius:999px;padding:4px}
+nav button{background:none;border:0;color:var(--mute);padding:8px 18px;border-radius:999px;font:inherit;cursor:pointer}
+nav button.on{background:var(--ink);color:#0a1330}
+button:focus-visible,.tile:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+main{padding:0 5vw 60px}
+.hero{min-height:38vh;display:flex;flex-direction:column;justify-content:flex-end;max-width:640px;padding:24px 0}
+h1{font-size:clamp(2rem,6vw,3.6rem);margin:0 0 10px;line-height:1.05}
+.hero p{color:var(--mute);margin:0 0 20px;line-height:1.5;max-width:52ch}
+.btn{display:inline-block;background:var(--ink);color:#0a1330;border:0;border-radius:999px;padding:12px 26px;font:600 1rem inherit;cursor:pointer;text-decoration:none;margin-right:8px}
+.btn.ghost{background:#ffffff1f;color:var(--ink)}
+.row{display:flex;gap:18px;overflow-x:auto;padding:14px 6px 24px;scroll-snap-type:x proximity}
+.tile{flex:0 0 220px;height:260px;border-radius:18px;background:var(--card);border:0;color:var(--ink);text-align:left;padding:0;cursor:pointer;overflow:hidden;scroll-snap-align:start;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;font:inherit}
+.tile:hover,.tile:focus-visible{transform:scale(1.07);box-shadow:0 0 0 3px var(--ink),0 18px 40px #0008}
+.art{flex:1;display:grid;place-items:center;font-size:3rem}
+.tile div.t{padding:12px 14px;background:#0006}
+.tile b{display:block}.tile small{color:var(--mute)}
+.panel{max-width:760px;background:#ffffff0f;border-radius:18px;padding:24px;margin-top:10px;line-height:1.6}
+.panel h3{margin:0 0 4px}.panel .when{color:var(--acc);font-size:.9rem}
+.bars div{margin:10px 0}.bar{height:8px;background:#ffffff1f;border-radius:9px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--gold))}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chips span{background:#ffffff1f;border-radius:999px;padding:6px 14px;font-size:.92rem}
+dialog{border:0;border-radius:18px;background:#0a1330;color:var(--ink);padding:18px;max-width:94vw}
+dialog::backdrop{background:#000a}
+canvas{display:block;background:#2f7d3a;border-radius:10px;max-width:100%;touch-action:none}
+.hud{display:flex;justify-content:space-between;margin-bottom:8px;color:var(--mute)}
+.pad{display:grid;grid-template-columns:repeat(3,52px);gap:6px;justify-content:center;margin-top:10px}
+.pad button{height:46px;border-radius:12px;border:0;background:#ffffff22;color:var(--ink);font-size:1.2rem}
+</style>
+</head>
+<body>
+<header>
+  <div class="user"><div class="av" id="ini"></div><div><b id="name"></b><br><small style="color:var(--mute)" id="role"></small></div></div>
+  <nav id="nav"></nav>
+</header>
+<main>
+  <section class="hero">
+    <h1 id="hTitle"></h1>
+    <p id="hText"></p>
+    <div><button class="btn" id="play">Jugar al minijuego</button><a class="btn ghost" id="cv" href="#">Descargar CV</a></div>
+  </section>
+  <div id="view"></div>
+</main>
+
+<dialog id="dlg">
+  <div class="hud"><span>Rupias: <b id="sc">0</b>/8</span><span>Vidas: <b id="lv">3</b></span><button class="btn ghost" id="close">Cerrar</button></div>
+  <canvas id="cv2" width="320" height="320"></canvas>
+  <div class="pad"><span></span><button data-d="U" aria-label="Arriba">▲</button><span></span><button data-d="L" aria-label="Izquierda">◀</button><button data-d="D" aria-label="Abajo">▼</button><button data-d="R" aria-label="Derecha">▶</button></div>
+  <p style="color:var(--mute);margin:8px 0 0;text-align:center">Flechas o botones. Recoge las rupias y esquiva al slime.</p>
+</dialog>
+
+<script>
+/* ===== EDITA AQUÍ TUS DATOS ===== */
+const DATA={
+  name:"Alejandro González Pérez", role:"Desarrollador Web Junior · Técnico en DAW",
+  title:"Hola, soy Alejandro. Desarrollo aplicaciones web y me encantan los videojuegos.",
+  text:"Estudio Desarrollo de Aplicaciones Web y trabajo con PHP, JavaScript, Java y bases de datos SQL. Vengo de años de trato con el público, así que sé trabajar bajo presión y en equipo.",
+  cvUrl:"#", // pon aquí el enlace a tu CV en PDF (Drive, GitHub...)
+  email:"alejandrogonzalezperez1008@gmail.com",
+  linkedin:"https://www.linkedin.com/in/alejandrogonzalezperez10081999/",
+  projects:[
+    {t:"Tienda online",s:"Proyecto de 2º DAW · En desarrollo",e:"🛒",d:"Tienda online que estoy desarrollando este curso como proyecto del ciclo. Iré añadiendo aquí las tecnologías, capturas y el enlace al código.",url:"#"},
+    {t:"Zelda (en desarrollo)",s:"HTML Canvas · JavaScript",e:"🗡️",d:"Juego de aventuras inspirado en Zelda que estoy creando con HTML Canvas y JavaScript. Mientras termino el mío, puedes probar un minijuego de demostración.",url:"#",game:1}
+  ],
+  skills:["Java","JavaScript","PHP","SQL","HTML","CSS","VS Code","GitHub","Linux"],
+  soft:["Comunicación efectiva","Empatía y escucha activa","Resolución de conflictos","Trabajo bajo presión","Orientación al cliente","Adaptabilidad","Trabajo en equipo","Proactividad","Capacidad de aprendizaje"],
+  cv:[
+    {t:"Grado Superior en Desarrollo de Aplicaciones Web",w:"IES El Cañaveral, Móstoles · Cursando actualmente",d:""},
+    {t:"IA Responsable y Prompt Engineering",w:"FounderZ, Microsoft · julio – agosto 2026",d:""},
+    {t:"Dependiente, Inditex (Stradivarius, Xanadú)",w:"septiembre 2021 – junio 2022",d:"Atención al cliente, cobros y conocimiento detallado del producto."},
+    {t:"Dependiente, McDonald's (Boadilla del Monte)",w:"octubre 2018 – junio 2019",d:"Servicio en un entorno de alta afluencia; ayudé en la formación de nuevos compañeros."},
+    {t:"Dependiente, Inditex (Massimo Dutti, Tres Aguas)",w:"julio 2017 – mayo 2018",d:"Atención al cliente y gestión de pagos."},
+    {t:"Bachillerato, IES Clara Campoamor",w:"2015 – 2017, Móstoles",d:""},
+    {t:"Idiomas",w:"",d:"Castellano nativo · Inglés B1"}
+  ]
+};
+/* ================================= */
+const $=s=>document.querySelector(s);
+$('#name').textContent=DATA.name;$('#role').textContent=DATA.role;
+$('#ini').textContent=DATA.name.split(' ').map(w=>w[0]).slice(0,2).join('');
+$('#hTitle').textContent=DATA.title;$('#hText').textContent=DATA.text;$('#cv').href=DATA.cvUrl;
+const tabs={Proyectos:()=>`<div class="row">${DATA.projects.map((p,i)=>`<button class="tile" data-i="${i}"><span class="art">${p.e}</span><div class="t"><b>${p.t}</b><small>${p.s}</small></div></button>`).join('')}</div><div class="panel" id="info"><h3>${DATA.projects[0].t}</h3><div class="when">${DATA.projects[0].s}</div><p>${DATA.projects[0].d}</p></div>`,
+Habilidades:()=>`<div class="panel"><h3>Técnicas</h3><p class="chips">${DATA.skills.map(k=>`<span>${k}</span>`).join('')}</p><h3>Personales</h3><p class="chips">${DATA.soft.map(k=>`<span>${k}</span>`).join('')}</p></div>`,
+Currículum:()=>`<div class="panel">${DATA.cv.map(c=>`<h3>${c.t}</h3><div class="when">${c.w}</div><p>${c.d}</p>`).join('')}<p><a class="btn" href="mailto:${DATA.email}">Escríbeme</a><a class="btn ghost" href="${DATA.linkedin}" target="_blank" rel="noopener">LinkedIn</a></p></div>`};
+function show(k){document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.textContent==k));$('#view').innerHTML=tabs[k]();
+ document.querySelectorAll('.tile').forEach(t=>{const f=()=>{const p=DATA.projects[t.dataset.i];$('#info').innerHTML=`<h3>${p.t}</h3><div class="when">${p.s}</div><p>${p.d}</p>`+(p.game?'<button class="btn" id="p2">Jugar</button>':`<a class="btn" href="${p.url}">Ver proyecto</a>`);const b=$('#p2');if(b)b.onclick=openGame};t.onmouseenter=f;t.onfocus=f;t.onclick=f})}
+$('#nav').innerHTML=Object.keys(tabs).map(k=>`<button>${k}</button>`).join('');
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>show(b.textContent));show('Proyectos');
+
+/* ===== Mini Zelda ===== */
+const c=$('#cv2'),x=c.getContext('2d'),T=32,N=10;let P,E,R,sc,lv,loop;
+function rnd(){return[Math.floor(Math.random()*N),Math.floor(Math.random()*N)]}
+function reset(){P=[5,5];E=[0,0];sc=0;lv=3;R=[];while(R.length<8){const r=rnd();if(!R.some(q=>q[0]==r[0]&&q[1]==r[1]))R.push(r)}upd()}
+function upd(){$('#sc').textContent=sc;$('#lv').textContent=lv}
+function draw(){x.fillStyle='#2f7d3a';x.fillRect(0,0,320,320);x.font='24px serif';x.textBaseline='middle';x.textAlign='center';
+ R.forEach(r=>x.fillText('💎',r[0]*T+16,r[1]*T+17));x.fillText('🟢',E[0]*T+16,E[1]*T+17);x.fillText('🧝',P[0]*T+16,P[1]*T+17)}
+function move(d){const m={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]}[d];if(!m)return;P=[Math.max(0,Math.min(N-1,P[0]+m[0])),Math.max(0,Math.min(N-1,P[1]+m[1]))];
+ R=R.filter(r=>{if(r[0]==P[0]&&r[1]==P[1]){sc++;return false}return true});upd();hit();draw();
+ if(sc==8){alert('¡Has ganado!');reset();draw()}}
+function hit(){if(E[0]==P[0]&&E[1]==P[1]){lv--;P=[5,5];upd();if(lv<=0){alert('Game over');reset()}}}
+function openGame(){reset();$('#dlg').showModal();draw();clearInterval(loop);loop=setInterval(()=>{E[0]+=Math.sign(P[0]-E[0]);if(Math.random()<.5)E[1]+=Math.sign(P[1]-E[1]);hit();draw()},600)}
+$('#close').onclick=()=>{clearInterval(loop);$('#dlg').close()};$('#dlg').onclose=()=>clearInterval(loop);
+$('#play').onclick=openGame;
+addEventListener('keydown',e=>{if(!$('#dlg').open)return;const d={ArrowUp:'U',ArrowDown:'D',ArrowLeft:'L',ArrowRight:'R'}[e.key];if(d){e.preventDefault();move(d)}});
+document.querySelectorAll('.pad button').forEach(b=>b.onclick=()=>move(b.dataset.d));
+</script>
+</body>
+</html>
