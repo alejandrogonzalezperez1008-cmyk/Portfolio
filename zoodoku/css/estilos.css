@@ -1,0 +1,357 @@
+/* estilos.css · Zoodoku
+   Los colores están como variables al principio para cambiarlos fácil. */
+
+:root {
+  --fondo: #f3ead7;
+  --fondo-claro: #fbf6ea;
+  --verde: #2f6b3f;
+  --verde-oscuro: #1f4a2c;
+  --verde-claro: #dcebd3;
+  --ambar: #e0a030;
+  --tierra: #7a5230;
+  --texto: #2b2a22;
+  --texto-suave: #6d6a58;
+  --acierto: #b9dcae;
+  --fallo: #e6a597;
+  --borde: #cdbf9f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Fredoka', 'Segoe UI', system-ui, sans-serif;
+  color: var(--texto);
+  background: var(--fondo);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---------- Cabecera ---------- */
+.cabecera {
+  width: 100%;
+  text-align: center;
+  padding: 22px 16px 14px;
+  background: var(--verde);
+  color: #fff;
+  border-bottom: 5px solid var(--ambar);
+}
+
+.cabecera h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  letter-spacing: 1px;
+}
+
+.subtitulo {
+  margin: 6px auto 0;
+  max-width: 480px;
+  font-size: 0.95rem;
+  color: var(--verde-claro);
+}
+
+/* ---------- Contenido principal ---------- */
+main {
+  width: 100%;
+  max-width: 640px;
+  padding: 18px 12px 8px;
+}
+
+.marcador {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.marcador p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.marcador strong {
+  color: var(--verde);
+  font-size: 1.2rem;
+}
+
+/* ---------- Tablero ---------- */
+/* 4 columnas: la de las cabeceras de fila y las 3 de casillas */
+.tablero {
+  display: grid;
+  grid-template-columns: 0.8fr repeat(3, 1fr);
+  gap: 6px;
+}
+
+.cabecera-criterio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 4px;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--verde-oscuro);
+  background: var(--verde-claro);
+  border-radius: 10px;
+}
+
+.cabecera-criterio .icono {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.casilla {
+  aspect-ratio: 1 / 1;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-family: inherit;
+  color: var(--texto);
+  background: var(--fondo-claro);
+  border: 2px solid var(--borde);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.15s, background 0.15s;
+}
+
+.casilla:hover:not(:disabled),
+.casilla:focus-visible {
+  background: #fff;
+  border-color: var(--ambar);
+  transform: scale(1.04);
+}
+
+.casilla[data-estado='ok'] {
+  background: var(--acierto);
+  border-color: var(--verde);
+  cursor: default;
+}
+
+.casilla:disabled:not([data-estado='ok']) {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.casilla .nombre {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.1;
+  word-break: break-word;
+}
+
+.casilla .rareza {
+  font-size: 0.72rem;
+  color: var(--verde-oscuro);
+}
+
+/* Sacudida cuando se falla */
+.casilla.fallo {
+  background: var(--fallo);
+  animation: sacudir 0.4s;
+}
+
+@keyframes sacudir {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* ---------- Mensajes ---------- */
+.mensaje {
+  min-height: 1.6em;
+  margin: 14px 0 6px;
+  text-align: center;
+  font-weight: 500;
+  color: var(--texto-suave);
+}
+
+.mensaje.ok {
+  color: var(--verde);
+}
+
+.mensaje.fallo {
+  color: #b23a25;
+}
+
+/* ---------- Ayuda ---------- */
+.ayuda {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: var(--fondo-claro);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+.ayuda summary {
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--verde-oscuro);
+}
+
+.ayuda ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.ayuda li {
+  margin-bottom: 4px;
+}
+
+/* ---------- Ventanas (buscador y final) ---------- */
+.ventana {
+  width: min(92vw, 420px);
+  padding: 18px;
+  color: var(--texto);
+  background: var(--fondo-claro);
+  border: 3px solid var(--verde);
+  border-radius: 16px;
+}
+
+.ventana::backdrop {
+  background: rgba(31, 74, 44, 0.55);
+}
+
+.ventana h2 {
+  margin: 0 0 4px;
+  color: var(--verde-oscuro);
+}
+
+.condicion {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+#campo-busqueda {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 1rem;
+  border: 2px solid var(--borde);
+  border-radius: 10px;
+}
+
+#campo-busqueda:focus {
+  outline: none;
+  border-color: var(--verde);
+}
+
+.resultados {
+  list-style: none;
+  margin: 10px 0;
+  padding: 0;
+  min-height: 40px;
+}
+
+.resultados button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  margin-bottom: 4px;
+  font-family: inherit;
+  font-size: 1rem;
+  text-align: left;
+  color: var(--texto);
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.resultados button:hover,
+.resultados button:focus-visible {
+  background: var(--verde-claro);
+}
+
+.resultados small {
+  color: var(--texto-suave);
+}
+
+.sin-resultados {
+  padding: 8px 4px;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+}
+
+.botones-fin {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.boton {
+  padding: 10px 18px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--verde);
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.boton:hover {
+  background: var(--verde-oscuro);
+}
+
+.boton.secundario {
+  color: var(--verde-oscuro);
+  background: var(--verde-claro);
+}
+
+.boton.secundario:hover {
+  background: #c9deb9;
+}
+
+/* Texto solo para lectores de pantalla */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* ---------- Pie ---------- */
+.pie {
+  margin-top: auto;
+  padding: 18px 12px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+}
+
+.pie p {
+  margin: 4px 0;
+}
+
+.pie a {
+  color: var(--verde);
+}
+
+/* ---------- Pantallas pequeñas ---------- */
+@media (max-width: 420px) {
+  .cabecera-criterio {
+    font-size: 0.68rem;
+  }
+  .casilla .nombre {
+    font-size: 0.72rem;
+  }
+  .casilla .rareza {
+    font-size: 0.65rem;
+  }
+}

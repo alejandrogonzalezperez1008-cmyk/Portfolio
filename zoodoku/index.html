@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zoodoku · El juego diario de animales</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🦁%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <header class="cabecera">
+    <h1>Zoodoku</h1>
+    <p class="subtitulo">Rellena el tablero con animales que cumplan la condición de su fila y la de su columna.</p>
+  </header>
+
+  <main>
+    <!-- Marcador: intentos que quedan y casillas acertadas -->
+    <section class="marcador" aria-label="Marcador">
+      <p>Intentos: <strong id="intentos">9</strong></p>
+      <p>Aciertos: <strong id="aciertos">0</strong>/9</p>
+    </section>
+
+    <!-- Tablero: la esquina vacía, 3 cabeceras de columna y 3 filas (cabecera + 3 casillas) -->
+    <div id="tablero" class="tablero" aria-label="Tablero de Zoodoku">
+      <div class="esquina" aria-hidden="true"></div>
+      <div class="cabecera-criterio" id="columna-0"></div>
+      <div class="cabecera-criterio" id="columna-1"></div>
+      <div class="cabecera-criterio" id="columna-2"></div>
+
+      <div class="cabecera-criterio" id="fila-0"></div>
+      <button class="casilla" type="button" data-celda="0" data-estado="vacia" aria-label="Casilla 1"></button>
+      <button class="casilla" type="button" data-celda="1" data-estado="vacia" aria-label="Casilla 2"></button>
+      <button class="casilla" type="button" data-celda="2" data-estado="vacia" aria-label="Casilla 3"></button>
+
+      <div class="cabecera-criterio" id="fila-1"></div>
+      <button class="casilla" type="button" data-celda="3" data-estado="vacia" aria-label="Casilla 4"></button>
+      <button class="casilla" type="button" data-celda="4" data-estado="vacia" aria-label="Casilla 5"></button>
+      <button class="casilla" type="button" data-celda="5" data-estado="vacia" aria-label="Casilla 6"></button>
+
+      <div class="cabecera-criterio" id="fila-2"></div>
+      <button class="casilla" type="button" data-celda="6" data-estado="vacia" aria-label="Casilla 7"></button>
+      <button class="casilla" type="button" data-celda="7" data-estado="vacia" aria-label="Casilla 8"></button>
+      <button class="casilla" type="button" data-celda="8" data-estado="vacia" aria-label="Casilla 9"></button>
+    </div>
+
+    <!-- Mensajes para el jugador (acierto, fallo, errores de conexión...) -->
+    <p id="mensaje" class="mensaje" role="status" aria-live="polite">Elige una casilla para empezar.</p>
+
+    <details class="ayuda">
+      <summary>¿Cómo se juega?</summary>
+      <ul>
+        <li>Pulsa una casilla y busca un animal que cumpla las dos condiciones (la de su fila y la de su columna).</li>
+        <li>Tienes 9 intentos. Cada animal que no cumple las condiciones gasta uno.</li>
+        <li>No puedes repetir un animal en el mismo tablero.</li>
+        <li>El porcentaje que sale al acertar es la gente que eligió ese mismo animal en esa casilla. Cuanto más bajo, más original.</li>
+        <li>Cada día hay un tablero nuevo.</li>
+      </ul>
+    </details>
+  </main>
+
+  <!-- Buscador de animales: se abre al pulsar una casilla vacía -->
+  <dialog id="buscador" class="ventana" aria-labelledby="buscador-titulo">
+    <h2 id="buscador-titulo">Elige un animal</h2>
+    <p class="condicion" id="condicion"></p>
+    <label for="campo-busqueda" class="solo-lectores">Buscar animal</label>
+    <input id="campo-busqueda" type="search" placeholder="Escribe un nombre" autocomplete="off">
+    <ul id="resultados" class="resultados"></ul>
+    <button id="cerrar-buscador" class="boton secundario" type="button">Cerrar</button>
+  </dialog>
+
+  <!-- Pantalla final: se abre al acabar los intentos o completar el tablero -->
+  <dialog id="fin" class="ventana" aria-labelledby="fin-titulo">
+    <h2 id="fin-titulo"></h2>
+    <p id="fin-texto"></p>
+    <div class="botones-fin">
+      <button id="boton-compartir" class="boton" type="button">Copiar resultado</button>
+      <button id="cerrar-fin" class="boton secundario" type="button">Cerrar</button>
+    </div>
+  </dialog>
+
+  <footer class="pie">
+    <p>Proyecto personal sin ánimo de lucro, hecho con PHP, MySQL y JavaScript. Sin imágenes de terceros.</p>
+    <p><a href="../index.html">Volver al portfolio</a></p>
+  </footer>
+
+  <script src="js/zoodoku.js"></script>
+</body>
+</html>
