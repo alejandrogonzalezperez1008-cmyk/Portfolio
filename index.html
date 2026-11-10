@@ -51,30 +51,27 @@ canvas{display:block;background:#2f7d3a;border-radius:10px;max-width:100%;touch-
   <section class="hero">
     <h1 id="hTitle"></h1>
     <p id="hText"></p>
-    <div><button class="btn" id="play">Jugar al minijuego</button><a class="btn ghost" id="cv" href="#">Descargar CV</a></div>
+    <div><a class="btn" href="mazmorra.html">Jugar</a><a class="btn ghost" id="cv" href="#">Descargar CV</a></div>
   </section>
   <div id="view"></div>
 </main>
-
-<dialog id="dlg">
-  <div class="hud"><span>Rupias: <b id="sc">0</b>/8</span><span>Vidas: <b id="lv">3</b></span><button class="btn ghost" id="close">Cerrar</button></div>
-  <canvas id="cv2" width="320" height="320"></canvas>
-  <div class="pad"><span></span><button data-d="U" aria-label="Arriba">▲</button><span></span><button data-d="L" aria-label="Izquierda">◀</button><button data-d="D" aria-label="Abajo">▼</button><button data-d="R" aria-label="Derecha">▶</button></div>
-  <p style="color:var(--mute);margin:8px 0 0;text-align:center">Flechas o botones. Recoge las rupias y esquiva al slime.</p>
-</dialog>
 
 <script>
 /* ===== EDITA AQUÍ TUS DATOS ===== */
 const DATA={
   name:"Alejandro González Pérez", role:"Desarrollador Web Junior · Técnico en DAW",
   title:"Hola, soy Alejandro. Desarrollo aplicaciones web y me encantan los videojuegos.",
-  text:"Estudio Desarrollo de Aplicaciones Web y trabajo con PHP, JavaScript, Java y bases de datos SQL. Vengo de años de trato con el público, así que sé trabajar bajo presión y en equipo.",
-  cvUrl:"#", // pon aquí el enlace a tu CV en PDF (Drive, GitHub...)
+  text:"Estudio Desarrollo de Aplicaciones Web y trabajo con PHP, JavaScript, Java y bases de datos SQL, y construyo proyectos propios: juegos, un escritorio retro y simuladores 3D. Vengo de años de trato con el público, así que sé trabajar bajo presión y en equipo.",
+  cvUrl:"CV_Alejandro_Gonzalez_Perez.pdf", // el PDF va en la raíz del repositorio, junto a este index.html
   email:"alejandrogonzalezperez1008@gmail.com",
   linkedin:"https://www.linkedin.com/in/alejandrogonzalezperez10081999/",
   projects:[
     {t:"Tienda online",s:"Proyecto de 2º DAW · En desarrollo",e:"🛒",d:"Tienda online que estoy desarrollando este curso como proyecto del ciclo. Iré añadiendo aquí las tecnologías, capturas y el enlace al código.",url:"#"},
-    {t:"Zelda (en desarrollo)",s:"HTML Canvas · JavaScript",e:"🗡️",d:"Juego de aventuras inspirado en Zelda que estoy creando con HTML Canvas y JavaScript. Mientras termino el mío, puedes probar un minijuego de demostración.",url:"#",game:1}
+    {t:"La Mazmorra Olvidada",s:"HTML Canvas · JavaScript",e:"🗡️",d:"Juego de aventuras de una mazmorra inspirado en los Zelda clásicos: 18 salas, espada, escudo y arco, tres tipos de enemigos y un gusano gigante como jefe final. Hecho con HTML Canvas y JavaScript, sin librerías.",url:"mazmorra.html",game:1},
+    {t:"Pixel OS",s:"HTML · CSS · JavaScript",e:"🖥️",d:"Escritorio retro de los 90 en el navegador, con identidad propia: ventanas que se arrastran, minimizan y maximizan, menú Inicio, barra de tareas con reloj, bloc de notas con guardado local, galería de sprites, panel de control con fondos y menú contextual. Sin librerías.",url:"pixel-os/",btn:"Abrir Pixel OS"},
+    {t:"Simulador de prótesis de mano",s:"Three.js · JavaScript",e:"🦾",d:"Configurador 3D en tiempo real de una prótesis de mano: grosor de pared, flexibilidad, fuerza de agarre y reparto de peso, con peso y fuerza calculados al momento. Incluye vista explosionada, capas (carcasa, mecanismo interno, malla) y una animación de impresión 3D.",url:"protesis-mano.html",btn:"Abrir simulador"},
+    {t:"Espada de energía",s:"Three.js · JavaScript",e:"⚔️",d:"Simulador 3D de una espada de energía con animaciones de ataque, defensa y giro, cámara orbital con zoom y desplazamiento, modo de cámara automática y resplandor activable. Funciona con ratón, teclado (teclas 1, 2 y 3) y táctil.",url:"espada-energia.html",btn:"Abrir simulador"},
+    {t:"Prisma",s:"Canvas 2D · JavaScript",e:"✨",d:"Miles de partículas que brotan de un proyector y se reorganizan en personajes en 3D (robot, conejo y alien). Proyección, rotación y físicas programadas desde cero, y las partículas reaccionan al cursor. Sin librerías.",url:"particulas-prisma.html",btn:"Abrir demo"}
   ],
   skills:["Java","JavaScript","PHP","SQL","HTML","CSS","VS Code","GitHub","Linux"],
   soft:["Comunicación efectiva","Empatía y escucha activa","Resolución de conflictos","Trabajo bajo presión","Orientación al cliente","Adaptabilidad","Trabajo en equipo","Proactividad","Capacidad de aprendizaje"],
@@ -97,26 +94,10 @@ const tabs={Proyectos:()=>`<div class="row">${DATA.projects.map((p,i)=>`<button 
 Habilidades:()=>`<div class="panel"><h3>Técnicas</h3><p class="chips">${DATA.skills.map(k=>`<span>${k}</span>`).join('')}</p><h3>Personales</h3><p class="chips">${DATA.soft.map(k=>`<span>${k}</span>`).join('')}</p></div>`,
 Currículum:()=>`<div class="panel">${DATA.cv.map(c=>`<h3>${c.t}</h3><div class="when">${c.w}</div><p>${c.d}</p>`).join('')}<p><a class="btn" href="mailto:${DATA.email}">Escríbeme</a><a class="btn ghost" href="${DATA.linkedin}" target="_blank" rel="noopener">LinkedIn</a></p></div>`};
 function show(k){document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.textContent==k));$('#view').innerHTML=tabs[k]();
- document.querySelectorAll('.tile').forEach(t=>{const f=()=>{const p=DATA.projects[t.dataset.i];$('#info').innerHTML=`<h3>${p.t}</h3><div class="when">${p.s}</div><p>${p.d}</p>`+(p.game?'<button class="btn" id="p2">Jugar</button>':`<a class="btn" href="${p.url}">Ver proyecto</a>`);const b=$('#p2');if(b)b.onclick=openGame};t.onmouseenter=f;t.onfocus=f;t.onclick=f})}
+ document.querySelectorAll('.tile').forEach(t=>{const f=()=>{const p=DATA.projects[t.dataset.i];$('#info').innerHTML=`<h3>${p.t}</h3><div class="when">${p.s}</div><p>${p.d}</p>`+`<a class="btn" href="${p.url}">${p.game?"Jugar":(p.btn||"Ver proyecto")}</a>`};t.onmouseenter=f;t.onfocus=f;t.onclick=f})}
 $('#nav').innerHTML=Object.keys(tabs).map(k=>`<button>${k}</button>`).join('');
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>show(b.textContent));show('Proyectos');
 
-/* ===== Mini Zelda ===== */
-const c=$('#cv2'),x=c.getContext('2d'),T=32,N=10;let P,E,R,sc,lv,loop;
-function rnd(){return[Math.floor(Math.random()*N),Math.floor(Math.random()*N)]}
-function reset(){P=[5,5];E=[0,0];sc=0;lv=3;R=[];while(R.length<8){const r=rnd();if(!R.some(q=>q[0]==r[0]&&q[1]==r[1]))R.push(r)}upd()}
-function upd(){$('#sc').textContent=sc;$('#lv').textContent=lv}
-function draw(){x.fillStyle='#2f7d3a';x.fillRect(0,0,320,320);x.font='24px serif';x.textBaseline='middle';x.textAlign='center';
- R.forEach(r=>x.fillText('💎',r[0]*T+16,r[1]*T+17));x.fillText('🟢',E[0]*T+16,E[1]*T+17);x.fillText('🧝',P[0]*T+16,P[1]*T+17)}
-function move(d){const m={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]}[d];if(!m)return;P=[Math.max(0,Math.min(N-1,P[0]+m[0])),Math.max(0,Math.min(N-1,P[1]+m[1]))];
- R=R.filter(r=>{if(r[0]==P[0]&&r[1]==P[1]){sc++;return false}return true});upd();hit();draw();
- if(sc==8){alert('¡Has ganado!');reset();draw()}}
-function hit(){if(E[0]==P[0]&&E[1]==P[1]){lv--;P=[5,5];upd();if(lv<=0){alert('Game over');reset()}}}
-function openGame(){reset();$('#dlg').showModal();draw();clearInterval(loop);loop=setInterval(()=>{E[0]+=Math.sign(P[0]-E[0]);if(Math.random()<.5)E[1]+=Math.sign(P[1]-E[1]);hit();draw()},600)}
-$('#close').onclick=()=>{clearInterval(loop);$('#dlg').close()};$('#dlg').onclose=()=>clearInterval(loop);
-$('#play').onclick=openGame;
-addEventListener('keydown',e=>{if(!$('#dlg').open)return;const d={ArrowUp:'U',ArrowDown:'D',ArrowLeft:'L',ArrowRight:'R'}[e.key];if(d){e.preventDefault();move(d)}});
-document.querySelectorAll('.pad button').forEach(b=>b.onclick=()=>move(b.dataset.d));
 </script>
 </body>
 </html>
