@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIXEL OS</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ESCRITORIO -->
+<div id="desktop">
+  <div class="desktop-icon" data-app="mi-pc" tabindex="0">
+    <div class="icon-img icon-pc"></div><span>Mi PC</span>
+  </div>
+  <div class="desktop-icon" data-app="notas" tabindex="0">
+    <div class="icon-img icon-notes"></div><span>Notas</span>
+  </div>
+  <div class="desktop-icon" data-app="galeria" tabindex="0">
+    <div class="icon-img icon-gallery"></div><span>Galería</span>
+  </div>
+  <div class="desktop-icon" data-app="control" tabindex="0">
+    <div class="icon-img icon-control"></div><span>Panel de Control</span>
+  </div>
+  <div class="desktop-icon" data-app="papelera" tabindex="0">
+    <div class="icon-img icon-trash"></div><span>Papelera</span>
+  </div>
+</div>
+
+<!-- CONTENEDOR DE VENTANAS -->
+<div id="windows-container"></div>
+
+<!-- MENÚ CONTEXTUAL -->
+<div id="context-menu" class="hidden">
+  <div class="menu-item" data-action="refresh">🔄 Actualizar</div>
+  <div class="menu-item" data-action="new-note">📝 Nueva nota</div>
+  <div class="menu-separator"></div>
+  <div class="menu-item" data-action="change-bg">🎨 Cambiar fondo</div>
+  <div class="menu-item" data-action="properties">⚙️ Propiedades</div>
+</div>
+
+<!-- MENÚ INICIO -->
+<div id="start-menu" class="hidden">
+  <div class="menu-header">PIXEL OS</div>
+  <div class="menu-item" data-app="mi-pc">💻 Mi PC</div>
+  <div class="menu-item" data-app="notas">📝 Bloc de Notas</div>
+  <div class="menu-item" data-app="galeria">🖼️ Galería</div>
+  <div class="menu-item" data-app="control">⚙️ Panel de Control</div>
+  <div class="menu-separator"></div>
+  <div class="menu-item" id="shutdown-btn">🔴 Apagar</div>
+</div>
+
+<!-- BARRA DE TAREAS -->
+<div id="taskbar">
+  <button id="start-btn" class="retro-button">🪟 Inicio</button>
+  <div id="taskbar-apps"></div>
+  <div id="clock">10:42</div>
+</div>
+
+<!-- PANTALLA DE APAGADO -->
+<div id="shutdown-screen" class="hidden">
+  <p>Es seguro apagar el equipo.</p>
+  <button class="retro-button" id="reboot-btn">Reiniciar</button>
+</div>
+
+<!-- PLANTILLA DE VENTANA -->
+<template id="window-template">
+  <div class="window">
+    <div class="title-bar">
+      <span class="window-title">Título</span>
+      <div class="window-controls">
+        <button class="win-btn minimize" aria-label="Minimizar">_</button>
+        <button class="win-btn maximize" aria-label="Maximizar">☐</button>
+        <button class="win-btn close" aria-label="Cerrar">X</button>
+      </div>
+    </div>
+    <div class="window-content"></div>
+  </div>
+</template>
+
+<script src="script.js"></script>
+</body>
+</html>
